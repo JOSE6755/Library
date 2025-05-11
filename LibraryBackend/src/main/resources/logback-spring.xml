@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <property name="LOGS" value="./logs" />
+    <appender name="RollingFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/logFile.log</file>
+        <maxHistory>10</maxHistory>
+        <totalSizeCap>1GB</totalSizeCap>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1} [%t] %m%n</Pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGS}/archived/logFile-%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>600KB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+        </rollingPolicy>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="RollingFile"/>
+    </root>
+    <logger name="org.springframework.web" level="DEBUG"/>
+</configuration>
